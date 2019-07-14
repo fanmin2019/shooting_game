@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>game 1</title>
+    <style media="screen">
+        canvas {
+            border: 1px black solid;
+        }
+    </style>
+    <!--game-->
+    <script src="min_game/utility.js"></script>
+    <script src="min_game/Min_game.js"></script>
+    <script src="min_game/Min_scene.js"></script>
+    <script src="min_game/Min_image.js"></script>
+    <!-- scene file -->
+    <script src="scene/main/Ball.js"></script>
+    <script src="scene/main/Paddle.js"></script>
+    <script src="scene/main/Block.js"></script>
+    <script src="scene/main/scene.js"></script>
+    <!-- scence title/end -->
+    <script src="scene/title/scene_title.js"></script>
+    <script src="scene/end/scene_end.js"></script>
+    <!--level-->
+    <script src="scene/editor/scence_editor.js"></script>
+    <script src="level.js"></script>
+</head>
+<body>
+<canvas id="id-canvas" width="400" height="600"></canvas>
+<hr>
+<hr>
+<label for="id-input-speed">
+</label>
+<input type="range" name="" id="id-input-speed" value="1">
+<div>
+    <label>
+    <input type="range" class="min-auto-slider" value="" data-value="config.player_speed">
+    Player speed <span class="min-label"></span>
+    </label>
+</div>
+<div>
+    <label>
+    <input type="range" class="min-auto-slider" value="" data-value="config.bullet_speed">
+    Bullet speed <span class="min-label"></span>
+    </label>
+</div>
+<div>
+    <label>
+    <input type="range" class="min-auto-slider" value="" min="-10" max="10" data-value="config.cloud_speed">
+    Cloud speed <span class="min-label"></span>
+    </label>
+</div>
+<div>
+    <label>
+    <input type="range" class="min-auto-slider" value="" max="100" data-value="config.fire_cooldown">
+    Bullet cool down time <span class="min-label"></span>
+    </label>
+</div>
+<script src="Main.js">
+</script>
+<script>
+    var es = sel => document.querySelectorAll(sel)
+    var bindAll = function (sel, eventname, callback) {
+        var l = es(sel)
+        for (let i = 0; i < l.length; i++) {
+            var e = l[i]
+            e.addEventListener(eventname, function (event) {
+                callback(event)
+            })
+        }
+
+    }
+    bindAll('.min-auto-slider', 'input', function (event) {
+        var target = event.target
+        var bindVar = target.dataset.value
+        log("bindVar", bindVar)
+        var v = target.value
+        eval(bindVar + "=" + v)
+        // config.player_speed = Number(v)
+        var label = target.closest('label').querySelector('.min-label')
+        label.innerText = v
+    })
+
+</script>
+
+</body>
+</html>
