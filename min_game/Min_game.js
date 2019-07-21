@@ -1,4 +1,3 @@
-//まだまだ大きい、もっと小さく分割する必要がある
 class MinGame {
     constructor(fps, images, runCallback) {
         window.fps = fps
@@ -61,7 +60,6 @@ class MinGame {
         //draw
         this.draw()
         //timer
-        //intervalおかしい
         var self = this
         setTimeout(() => {
             this.runloop()
@@ -94,13 +92,6 @@ class MinGame {
 
     textureByName = (name) => {
         var o = this.images[name]
-        // log("g.images[name]", g.images[name], "name", name, "g.images", g.images)
-        //今後長さと高さを取りやすくするため
-        // var image = {
-        //     w: o.width,
-        //     h: o.height,
-        //     image: o,
-        // }
         return o
     }
 

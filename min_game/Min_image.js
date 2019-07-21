@@ -27,10 +27,3 @@ class MinImage {
 
     }
 }
-
-//逻辑上不应该集成minImage的
-// class Player extends  MinImage {
-//     constructor(game, name) {
-//      super(game, name)
-//     }
-// }

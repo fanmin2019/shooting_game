@@ -1,10 +1,8 @@
-
 class SceneEditor  extends MinScene {
     constructor(game) {
         super(game)
         this.levels =[]
         //initialize
-        // this.ball = Ball(game, 450, 100)
         this.block = Block(game, [420,200])
         this.blocks = {
             "x420y200": this.block,
