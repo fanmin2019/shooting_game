@@ -5,6 +5,8 @@ const config = {
     bullet_speed: 1,
     fire_cooldown:9,
 }
+
+
 class Bullet extends MinImage {
     constructor(game) {
         super(game, 'bullet')
@@ -13,11 +15,49 @@ class Bullet extends MinImage {
 
     setup() {
         this.speed = 1
+        this.alive = true
     }
 
     update() {
+        log("my update")
         this.speed = config.bullet_speed
         this.y -= this.speed
+    }
+
+    kill() {
+        this.alive = false
+    }
+
+    draw() {
+        // log(this.x, this.y , "player")
+        if(this.alive) {
+            super.draw()
+        }
+    }
+}
+
+
+class BulletEnemy extends MinImage{
+    constructor(game) {
+        super(game, 'bullet_enemy')
+        this.setup()
+    }
+
+    setup() {
+        this.speed = 5
+        this.alive = true
+    }
+
+    update() {
+        this.y += this.speed
+        // log(this.x, this.y, "enemy bullet")
+    }
+
+    draw() {
+        // log(this.x, this.y , "player")
+        if(this.alive) {
+            super.draw()
+        }
     }
 }
 
@@ -30,21 +70,65 @@ class Player extends MinImage {
     setup() {
         this.speed = 5
         this.cooldown = 0
+        this.alive = true
+        this.lives = 1
+        this.waitover = 20
+        window.player_bullets = []
+
     }
 
     update() {
         // super.update();
         // log("player class", config.player_speed)
-        log("update")
+        // log("update")
         this.speed = config.player_speed
         // log("this.cool   down", this.cooldown)
         if(this.cooldown > 0) {
             log("cooldown update", this.cooldown )
             this.cooldown --
+        } else {
+            for (var b of window.bullets_enemy) {
+                if (this.collide(b)) {
+                    this.kill()
+                    var ps = MinParticleSystem.new(this.game, this.x, this.y)
+                    this.scence.addElement(ps)
+
+                }
+            }
+
+            if(this.scence.elements.length > 0) {
+                log(this.scence.elements)
+                var enemys = this.scence.elements.filter(e => e.name.includes('enemy'))
+
+                // log("enemys", enemys, this.scence.elements)
+                for (var e of enemys) {
+                    if (this.collide(e)) {
+                        this.kill()
+                        var ps = MinParticleSystem.new(this.game, this.x, this.y)
+                        this.scence.addElement(ps)
+                    }
+                }
+            }
+
+            if(!this.alive) {
+                this.waitover--
+                if(this.waitover < 1) {
+                    var s = SceneEnd.new(this.game)
+                    this.game.runWithScene(s)
+                }
+            }
         }
-        log(this.x, this.y)
+        // log(this.x, this.y)
 
     }
+
+    draw() {
+        // log(this.x, this.y , "player")
+        if(this.alive) {
+            super.draw()
+        }
+    }
+
 
     moveLeft() {
         log("moveleft", this.speed)
@@ -73,16 +157,28 @@ class Player extends MinImage {
             var b = Bullet.new(this.game)
             b.x = x
             b.y = y
+            window.player_bullets.push(b)
             this.scence.addElement(b)
         }
 
+    }
+
+    kill() {
+        this.lives--
+        if(this.lives < 1) {
+            this.alive = false
+        }
+    }
+
+    collide(bullet) {
+        return this.alive && (rectInterSects(this, bullet) || rectInterSects(bullet, this))
     }
 
 }
 
 class Enemy extends MinImage {
     constructor(game) {
-        var type = randomBetween(0, 4)
+        var type = randomBetween(0, 1)
         var name = 'enemy' + type
         super(game, name)
         this.setup()
@@ -93,17 +189,69 @@ class Enemy extends MinImage {
         this.speed = s
         this.x = randomBetween(0, 350)
         this.y = - randomBetween(0, 200)
-        // this.y = 0
-        // log("x", this.x, "y", this.y)
+        this.cooldown = 50
+        // this.bullets = []
+        this.alive = true
+        this.my_bullets = []
     }
 
     update() {
         this.y += this.speed
-        if(this.y > 600) {
+        if(this.cooldown > 0) {
+            this.cooldown --
+        } else if(this.cooldown == 0 && this.alive ){
+            this.fire()
+        }
+
+        for (var b of window.player_bullets) {
+            if (this.collide(b)) {
+                this.kill()
+                b.kill()
+                var ps = MinParticleSystem.new(this.game, this.x, this.y)
+                this.scence.addElement(ps)
+
+            }
+        }
+
+
+            if(this.y > 600) {
             this.setup()
+        }
+    }
+
+    kill() {
+        this.alive = false
+        for(var mb of this.my_bullets) {
+            mb.alive = false
+        }
+    }
+
+    fire() {
+        if(this.cooldown <= 0) {
+            this.cooldown = 50
+            var x = this.x + this.w / 2
+            var y = this.y + this.h /2
+            var b = BulletEnemy.new(this.game)
+            b.x = x
+            b.y = y
+            this.my_bullets.push(b)
+            window.bullets_enemy.push(b)
+            this.scence.addElement(b)
         }
 
     }
+
+    collide(bullet) {
+        return this.alive && (rectInterSects(this, bullet) || rectInterSects(bullet, this))
+    }
+
+    draw() {
+        // log(this.x, this.y , "player")
+        if(this.alive) {
+            super.draw()
+        }
+    }
+
 
 }
 
@@ -156,20 +304,19 @@ class Scene extends MinScene {
 
     setup() {
         var game = this.game
-        this.numberOfEnemy = 10
+        this.numberOfEnemy = 5
         this.bg = MinImage.new(game, 'sky')
         this.cloud = Cloud.new(game)
         this.player = new Player(game)
         // this.player = MinImage.new(game, 'player')
         this.player.x = 100
-        this.player.y = 150
+        this.player.y = 380
 
         this.addElement(this.bg)
         this.addElement(this.cloud)
         this.addElement(this.player)
 
         this.addEnemies()
-
     }
 
     addEnemies() {

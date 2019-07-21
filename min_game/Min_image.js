@@ -1,5 +1,6 @@
 class MinImage {
     constructor(game, name) {
+        this.name = name
         this.game = game
         this.texture = game.textureByName(name)
         this.x = 0
@@ -19,7 +20,7 @@ class MinImage {
     }
 
     draw() {
-
+        this.game.drawImage(this)
     }
 
     update() {

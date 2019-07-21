@@ -38,11 +38,16 @@ var __main = function() {
         'enemy2': 'img/enemy3.png',
         'enemy3': 'img/enemy1.png',
         'enemy4': 'img/enemy2.png',
+        'fire': 'img/fire.png',
+        'bullet_enemy': 'img/bullet_enemy.png',
     }
 
 
+    window.bullets_enemy = []
+
     var game =  MinGame.instance(30, images, function (g) {
         // log("game22", g)
+        // var s = SceneTitle.new(g)
         var s = Scene.new(g)
         game.runWithScene(s)
         window.paused = false
