@@ -11,7 +11,6 @@ class Player extends MinImage {
         this.lives = 1
         this.waitover = 20
         window.player_bullets = []
-
     }
 
     update() {
@@ -21,7 +20,7 @@ class Player extends MinImage {
             this.cooldown --
         } else {
             for (var b of window.bullets_enemy) {
-                if (this.collide(b)) {
+                if (this.collide(b) && b.alive) {
                     this.kill()
                     var ps = MinParticleSystem.new(this.game, this.x, this.y)
                     this.scence.addElement(ps)
@@ -30,12 +29,12 @@ class Player extends MinImage {
             }
 
             if(this.scence.elements.length > 0) {
-                log(this.scence.elements)
+                // log(this.scence.elements)
                 var enemys = this.scence.elements.filter(e => e.name.includes('enemy'))
 
                 // log("enemys", enemys, this.scence.elements)
                 for (var e of enemys) {
-                    if (this.collide(e)) {
+                    if (this.collide(e) && e.alive) {
                         this.kill()
                         var ps = MinParticleSystem.new(this.game, this.x, this.y)
                         this.scence.addElement(ps)
@@ -50,6 +49,7 @@ class Player extends MinImage {
                     this.game.runWithScene(s)
                 }
             }
+
         }
         // log(this.x, this.y)
 
@@ -64,11 +64,11 @@ class Player extends MinImage {
 
 
     moveLeft() {
-        log("moveleft", this.speed)
+        // log("moveleft", this.speed)
         this.x -= this.speed
     }
     moveRight() {
-        log("moveright", this.speed)
+        // log("moveright", this.speed)
         this.x += this.speed
     }
 

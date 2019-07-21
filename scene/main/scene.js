@@ -26,11 +26,12 @@ class Scene extends MinScene {
         // this.player = MinImage.new(game, 'player')
         this.player.x = 100
         this.player.y = 380
+        this.score = Score.new(game)
 
         this.addElement(this.bg)
         this.addElement(this.cloud)
         this.addElement(this.player)
-
+        this.addElement(this.score)
         this.addEnemies()
     }
 

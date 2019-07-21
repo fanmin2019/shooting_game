@@ -26,12 +26,12 @@ class Enemy extends MinImage {
         }
 
         for (var b of window.player_bullets) {
-            if (this.collide(b)) {
+            if (this.collide(b) && b.alive) {
                 this.kill()
                 b.kill()
                 var ps = MinParticleSystem.new(this.game, this.x, this.y)
                 this.scence.addElement(ps)
-
+                window.score += 10
             }
         }
 
