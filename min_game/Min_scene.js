@@ -21,7 +21,6 @@ class MinScene {
     }
 
     draw (){
-        // alert("must be override!")
         for (let e of this.elements) {
         // for (let i = 0; i < this.elements.length; i++) {
         //     let e = this.elements[i]
@@ -38,6 +37,7 @@ class MinScene {
                 e.debug && e.debug()
             }
         }
+        //polymorphism
         for (let i = 0; i < this.elements.length; i++) {
             let e = this.elements[i]
             e.update()

@@ -66,17 +66,13 @@ class SceneEditor  extends MinScene {
         for(var key in this.blocks) {
             this.game.drawImage(this.blocks[key])
         }
-        // this.game.drawImage(this.ball)
 
         this.game.context.fillStyle = "white";
-        console.log("wwwwwww")
         this.game.context.fillText("按t保存关卡", 410, 50);
         this.game.context.fillText("按s下载关卡文件", 410, 60);
         this.game.context.fillText("正在编辑", 410, 80);
         this.game.context.fillText("第" + this.levelCounter + "关", 410, 90);
 
-
-        // this.game.context.fillText("Level Editor, Press e to set level", 100, 200);
 
     }
 
@@ -84,21 +80,12 @@ class SceneEditor  extends MinScene {
         // game.replaceScene()
         // this.draw()
 
-        var enableDragBall;
         var enableDragBlock;
         this.game.canvas.addEventListener('mousedown', event => {
             // log(evt)
             var x = event.offsetX
             var y = event.offsetY
-            // log("mousedown", x, y)
-            //is ball clicked?
-            // if (this.ball.hasPoint(x, y)) {
-            //     enableDragBall = true
-            // }
 
-            // if(this.block.hasPoint(x, y)) {
-            //     enableDragBlock = true
-            // }
             for (var key in  this.blocks) {
                 var b = this.blocks[key]
                 if(b.hasPoint(x, y)) {
@@ -107,7 +94,7 @@ class SceneEditor  extends MinScene {
                     break
                 }
             }
-            log("this.number", this.number)
+            // log("this.number", this.number)
 
         })
 

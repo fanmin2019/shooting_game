@@ -47,7 +47,7 @@ var __main = function() {
     var game =  MinGame.instance(30, images, function (g) {
         // log("game22", g)
         // var s = SceneTitle.new(g)
-        var s = Scene.new(g)
+        var s = SceneTitle.new(g)
         game.runWithScene(s)
         window.paused = false
     })
